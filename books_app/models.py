@@ -25,6 +25,8 @@ class Book(db.Model):
     # The genres, e.g. fiction, sci-fi, fantasy
     genres = db.relationship('Genre', secondary='book_genre', back_populates='books')
 
+    users = db.relationship('User', secondary='favorite_books', back_populates='books')
+
     def __str__(self):
         return f'<Book: {self.title}>'
 
@@ -64,9 +66,9 @@ class User(db.Model):
     """User model."""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), nullable=False, unique=True)
-    books = db.relationship('Book', secondary="favorite_books", back_populates="user")
+    books = db.relationship('Book', secondary='favorite_books', back_populates='users')
 
 favorite_books_table = db.Table('favorite_books',
     db.Column('book_id', db.Integer, db.ForeignKey('book.id')),
-    db.Column('user_id', db.Integer, db.ForeignKey('user_id'))
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id'))
 )
